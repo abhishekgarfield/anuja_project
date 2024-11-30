@@ -6,12 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
   shortenForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const longUrl = longUrlInput.value;
-    const token = localStorage.getItem("apiToken");
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/shorten",
-        { url: { original_url: longUrl } },
+        "http://localhost:3000/api/v1/urls",
+        { original_url: longUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -46,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const { token, expires_at } = response.data;
 
       if (token && expires_at) {
-        localStorage.setItem("apiToken", token);
         clientResponseOutput.innerHTML = `
           Your token is: <strong>${token}</strong><br>
           It will expire on: <strong>${expires_at}</strong><br><br>
