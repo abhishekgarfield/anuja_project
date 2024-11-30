@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_30_130825) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_30_153024) do
+  create_table "api_tokens", force: :cascade do |t|
+    t.string "token"
+    t.string "client_name"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "urls", force: :cascade do |t|
     t.string "original_url"
     t.string "short_url"

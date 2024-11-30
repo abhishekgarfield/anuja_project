@@ -1,28 +1,45 @@
-module Api
-  module V1
-    class UrlsController < ApplicationController
-      before_action :authenticate_token
+class Api::V1::UrlsController < ApplicationController
+  before_action :authenticate_token
 
-      def create
-        url = Url.new(url_params)
-        if url.save
-          render json: { short_url: redirect_url(url.short_url), token: url.token }, status: :created
-        else
-          render json: { error: url.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
+  def create
+    original_url = params[:original_url]
 
-      private
-
-      def url_params
-        params.require(:url).permit(:original_url)
-      end
-
-      def authenticate_token
-        puts "------ENV['API_TOKEN']----#{ENV['API_TOKEN']}"
-        provided_token = request.headers['Authorization']&.split(' ')&.last
-        render json: { error: 'Unauthorized' }, status: :unauthorized unless provided_token == ENV['API_TOKEN']
-      end
+    if original_url.blank?
+      render json: { error: 'Original URL cannot be blank' }, status: :unprocessable_entity
+      return
     end
+
+    url = Url.new(original_url: original_url)
+
+    if url.save
+      render json: { short_url: url.short_url, original_url: url.original_url }, status: :created
+    else
+      render json: { error: url.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def authenticate_token
+    provided_token = request.headers['Authorization']&.split(' ')&.last
+    puts "-----provided_token -----#{provided_token}"
+
+    if provided_token.blank? || !valid_token?(provided_token)
+      render json: { error: 'Invalid or missing API token' }, status: :unauthorized
+    end
+  end
+
+  def valid_token?(token)
+    # Check the database for a valid token
+    api_token = ApiToken.find_by(token: token)
+
+    # Check if the token is valid and not expired
+    return true if api_token && api_token.expires_at > Time.current
+
+    # Check the .env API token as a fallback
+    env_token = ENV['API_TOKEN']
+    return true if env_token.present? && ActiveSupport::SecurityUtils.secure_compare(env_token, token)
+
+    false
   end
 end

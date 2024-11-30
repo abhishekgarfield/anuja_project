@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+form {
+  margin: 20px 0;
+}
+input[type="text"] {
+  padding: 10px;
+  width: 80%;
+  margin-bottom: 10px;
+}
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
+}
+p {
+  margin-top: 10px;
+  word-wrap: break-word;
+}
+code {
+  display: block;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-top: 10px;
+  text-align: left;
+  overflow-x: auto;
+}
+
+#clientResponse {
+  display: inline-block;
+  text-align: left; /* Keeps the text left-aligned inside the block */
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 80%; /* Optional: You can adjust the max-width */
+  word-wrap: break-word;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
